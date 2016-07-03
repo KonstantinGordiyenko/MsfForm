@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+
+    <link type="text/css" rel="stylesheet" href="/css/msf.css" />
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+
+<script type="text/javascript">
+    $(function () {
+      //alert('jready');
+
+      var $sections = $('.form-section');
+
+      function navigateTo(index) {
+        // Mark the current section with the class 'current'
+        $sections
+          .removeClass('current')
+          .eq(index)
+            .addClass('current');
+        // Show only the navigation buttons that make sense for the current section:
+        $('.form-navigation .previous').toggle(index > 0);
+        var atTheEnd = index >= $sections.length - 1;
+        $('.form-navigation .next').toggle(!atTheEnd);
+        $('.form-navigation [type=submit]').toggle(atTheEnd);
+      }
+
+      function curIndex() {
+        // Return the current index by looking at which section has the class 'current'
+        return $sections.index($sections.filter('.current'));
+      }
+
+      // Previous button is easy, just go back
+      $('.form-navigation .previous').click(function() {
+        navigateTo(curIndex() - 1);
+      });
+
+      // Next button goes forward iff current block validates
+      $('.form-navigation .next').click(function() {
+        //if ($('.demo-form').parsley().validate({group: 'block-' + curIndex()}))
+          navigateTo(curIndex() + 1);
+      });
+
+      // Prepare sections by setting the `data-parsley-group` attribute to 'block-0', 'block-1', etc.
+      $sections.each(function(index, section) {
+        $(section).find(':input').attr('data-parsley-group', 'block-' + index);
+      });
+
+      navigateTo(0); // Start at the beginning
+    });
+</script>
+
+</head>
+
+
+
+
+<body>
+    <form class="demo-form">
+        <div class="form-section">
+            <label for="firstname">First Name:</label>
+            <input name="firstname" class="form-control" required="" type="text">
+
+            <label for="lastname">Last Name:</label>
+            <input name="lastname" class="form-control" required="" type="text">
+        </div>
+
+        <div class="form-section">
+            <label for="email">Email:</label>
+            <input name="email" class="form-control" required="" type="email">
+        </div>
+
+        <div class="form-section">
+            <label for="color">Favorite color:</label>
+            <input name="color" class="form-control" required="" type="text">
+        </div>
+
+        <div class="form-navigation">
+            <button class="previous btn btn-info pull-left" type="button">&lt; Previous</button>
+            <button class="next btn btn-info pull-right" type="button">Next &gt;</button>
+            <input class="btn btn-default pull-right" type="submit" value="Submit Query">
+            <span class="clearfix"></span>
+        </div>
+
+    </form>
+
+</body>
+</html>
